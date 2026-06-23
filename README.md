@@ -15,9 +15,7 @@ S-JEPA learns speech representations by masked prediction in a convolutional-tra
 - [Data Preparation](#data-preparation)
 - [Training Pipeline](#training-pipeline)
 - [Key Hyperparameters](#key-hyperparameters)
-- [Results](#results)
 - [Citation](#citation)
-- [License](#license)
 
 ---
 
@@ -188,3 +186,17 @@ A stable recipe that has worked well in practice:
 - **Iteration 1 (phase 0):** standard warmup-decay LR schedule.
 - **Iteration 2+ :** constant `lr=1e-5`, `ema_decay=1.0`, `param_ema=0.999`.
 - **On downstream plateau:** increase the number of GMM components (`--K`) and/or the amount of training data.
+
+## Citation
+
+```
+@misc{ioannides2026sjepasoftclustering,
+      title={S-JEPA : Soft Clustering Anchors for Self-Supervised Speech Representation Learning}, 
+      author={Georgios Ioannides and Adrian Kieback and Judah Goldfeder and Linsey Pang and Aman Chadha and Aaron Elkins and Yann LeCun and Ravid Shwartz-Ziv},
+      year={2026},
+      eprint={2606.19398},
+      archivePrefix={arXiv},
+      primaryClass={cs.SD},
+      url={https://arxiv.org/abs/2606.19398}, 
+}
+```
