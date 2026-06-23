@@ -76,8 +76,6 @@ The encoder sees zeros at masked positions; the lightweight `JEPAPredictor` reco
 └── README.md
 ```
 
-> Note: the main trainer is currently named `train.py`. Renaming it to `train.py` is recommended (see the cleanup notes at the end of this file).
-
 ---
 
 ## Installation
