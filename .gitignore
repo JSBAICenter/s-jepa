@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Checkpoints & model artifacts (use Releases / external storage, not git)
+*.pt
+*.ckpt
+*.bin
+ckpts/
+checkpoints/
+model_*/
+gmm_*/
+
+# Generated indices / logs
+path_index.txt
+*.tmp.*
+log.txt
+effective_ranks.txt
+*.log
+wandb/
+runs/
+tensorboard/
+
+# Data
+data/
+*.jsonl
+*.wav
+*.flac
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
