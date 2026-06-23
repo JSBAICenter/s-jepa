@@ -1,8 +1,8 @@
-# S-JEPA-KL
+# S-JEPA
 
 **Self-supervised speech representation learning with a Joint-Embedding Predictive Architecture and GMM soft-target KL distillation.**
 
-S-JEPA-KL learns speech representations by masked prediction in a convolutional-transformer speech encoder, but instead of predicting hard cluster IDs it predicts **soft posterior distributions** from a Gaussian Mixture Model and minimizes a KL divergence. Targets are refined iteratively: an initial GMM is fit on MFCC features, then subsequent iterations fit (or continuously update) a GMM on the model's own EMA-encoded features.
+S-JEPA learns speech representations by masked prediction in a convolutional-transformer speech encoder, but instead of predicting hard cluster IDs it predicts **soft posterior distributions** from a Gaussian Mixture Model and minimizes a KL divergence. Targets are refined iteratively: an initial GMM is fit on MFCC features, then subsequent iterations fit (or continuously update) a GMM on the model's own EMA-encoded features.
 
 ---
 
