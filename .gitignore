@@ -14,7 +14,7 @@ env/
 *.ckpt
 *.bin
 ckpts/
-checkpoints/
+checkpoints/*
 model_*/
 gmm_*/
 
@@ -39,3 +39,6 @@ data/
 .idea/
 .vscode/
 *.swp
+
+# ship the trained audio checkpoint for at-home student use (Git LFS)
+!checkpoints/portable_step64000.pt

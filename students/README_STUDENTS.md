@@ -123,6 +123,39 @@ predictor's positional embedding covers at most 750 frames = 15 s at 50 fps).
    masked positions separately) — the head is trained only on predictor outputs, so
    clean-feature and masked-position behaviour differ.
 
+## From home (GitHub clone — no lab access needed)
+
+The trained checkpoint ships via **Git LFS** on the org repo **JSBAICenter/JEPA, branch
+`sjepa-students`** (`checkpoints/portable_step64000.pt`, 242 MB — the later, more-trained
+snapshot; the 61k one stays on the lab share). The public `JSBAICenter/s-jepa` fork carries
+code + these scripts only — GitHub blocks LFS uploads to public forks. JEPA is a **private**
+repo: you need org access (SSH key, or HTTPS with a personal access token). The lab's
+sample clips are NOT in the repo — record your own (16 kHz mono, **<= 15 s**):
+
+```bash
+git clone -b sjepa-students git@github.com:JSBAICenter/JEPA.git s-jepa
+cd s-jepa                                 # the LFS checkpoint downloads with the clone
+# if you cloned with LFS skipped:  git lfs install && git lfs pull
+pip install torch scipy matplotlib sounddevice   # CPU-only is fine; scripts auto-fallback
+
+# record ~10 s of your voice:
+python3 students/record_audio.py --seconds 10 --out my_voice.wav
+#  ...or with ffmpeg:  macOS: ffmpeg -f avfoundation -i ":0" -t 10 -ar 16000 -ac 1 my_voice.wav
+#                      Linux: ffmpeg -f pulse -i default -t 10 -ar 16000 -ac 1 my_voice.wav
+#                      phone: ffmpeg -i voice.m4a -ar 16000 -ac 1 my_voice.wav
+
+python3 students/01_encoder.py     --ckpt checkpoints/portable_step64000.pt --audio my_voice.wav
+python3 students/02_gmm_fitting.py --ckpt checkpoints/portable_step64000.pt --audio my_voice.wav [--audio more.wav ...]
+python3 students/03_cluster_head.py --ckpt checkpoints/portable_step64000.pt --audio my_voice.wav
+python3 students/04_predictor.py   --ckpt checkpoints/portable_step64000.pt --audio my_voice.wav
+```
+
+(02 accepts repeated `--audio` flags — give it 2-4 clips for a richer EM fit; at home the
+fit set defaults to just the clips you pass. Figures land in `students/figures/`.)
+If your clone has no LFS data (`checkpoints/*.pt` are ~130-byte pointer files), run
+`git lfs install && git lfs pull`. If LFS bandwidth is exhausted (free-tier quota),
+ask the lab to enable a data pack or use the lab machines.
+
 ## Pointers
 - `../../GETTING_STARTED.md` — the kit's main guide (concepts, inventory, §6 coherence
   story, more exercises).

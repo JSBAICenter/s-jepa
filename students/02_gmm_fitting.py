@@ -150,21 +150,30 @@ def responsibilities(X, means, variances, weights):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--ckpt', default=os.path.join(AUDIO_ROOT, 'checkpoints', 'portable_step64000.pt'))
+    ap.add_argument('--audio', action='append', default=None,
+                    help='one or more clips (16 kHz mono, <=15 s); first is the analysis clip. '
+                         'Default: the lab kit clips. Repeatable: --audio a.wav --audio b.wav')
     ap.add_argument('--gpu', type=int, default=0)
     args = ap.parse_args()
     dev = f'cuda:{args.gpu}' if torch.cuda.is_available() else 'cpu'
 
-    clip = os.path.join(AUDIO_ROOT, 'clips', '13_secs.wav')
+    if args.audio:
+        # user-supplied clips (e.g. your own recording from home): first is the
+        # analysis clip, all of them join the EM fit set below
+        clip = args.audio[0]
+        extra = [p for p in args.audio[1:]]
+    else:
+        clip = os.path.join(AUDIO_ROOT, 'clips', '13_secs.wav')
+        import glob
+        extra = sorted(glob.glob(os.path.join(AUDIO_ROOT, 'clips', 'librispeech-sample', '*.flac')))[:3]
     x = load_audio(clip)
-    print(f"clip: 13_secs.wav — {len(x)/SR:.1f} s")
+    print(f"clip: {os.path.basename(clip)} — {len(x)/SR:.1f} s")
 
     # ---------------- PART A: your own GMM on acoustics ----------------------
     print("\n=== PART A: log-mel + hand-rolled EM, K=20 ===")
     feats13 = logmel(x)                                      # (n_frames, 40)
     print(f"log-mel features: {feats13.shape}  (100 fps: 25 ms window, 10 ms hop)")
-    # A couple more clips for a slightly richer fit (LibriSpeech .flac samples)
-    import glob
-    extra = sorted(glob.glob(os.path.join(AUDIO_ROOT, 'clips', 'librispeech-sample', '*.flac')))[:3]
+    # Extra clips for a richer fit (LibriSpeech samples by default, or your --audio list)
     X_fit = np.concatenate([feats13] + [logmel(load_audio(p)) for p in extra])
     print(f"fitting set: {X_fit.shape[0]} frames from {1 + len(extra)} clips")
 
@@ -173,7 +182,7 @@ def main():
           f"(should rise monotonically then flatten)")
     resp13 = responsibilities(feats13, means, variances, weights)   # (n_frames, 20)
     ent = -(resp13 * np.log(resp13 + 1e-12)).sum(1).mean()
-    print(f"your GMM on 13_secs.wav: mean posterior entropy {ent:.3f} nats, "
+    print(f"your GMM on {os.path.basename(clip)}: mean posterior entropy {ent:.3f} nats, "
           f"{len(np.unique(resp13.argmax(1)))} distinct components used")
 
     # ---------------- PART B: the trained vocabulary -------------------------
