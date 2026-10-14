@@ -132,3 +132,12 @@ predictor's positional embedding covers at most 750 frames = 15 s at 50 fps).
   every construct in these scripts is a commented replica of a piece of it.
 - `../../examples/load_audio_sjepa.py` — the verified minimal loader these scripts
   borrow from.
+
+## Data provenance
+
+- `clips/librispeech-sample/` — **LibriSpeech** (Panayotov et al., ICASSP 2015;
+  OpenSLR SLR12, https://openslr.org/12, CC BY 4.0), sampled from the lab's local copy.
+- `clips/13_secs.wav`, `2mins.wav` — S-JEPA project test clips (author-provided);
+  `2mins.wav` is misnamed (~13 s, same as `13_secs.wav`).
+- Checkpoints `portable_step61000/64000.pt` — released S-JEPA (audio) training
+  snapshots from the S-JEPA author; paper: arXiv 2606.19398.
