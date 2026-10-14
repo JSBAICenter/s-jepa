@@ -186,6 +186,13 @@ def main():
           f"{len(np.unique(resp13.argmax(1)))} distinct components used")
 
     # ---------------- PART B: the trained vocabulary -------------------------
+    if not os.path.exists(args.ckpt):
+        print("\n[checkpoint not found — skipping PART B. PART A above is the COMPLETE")
+        print(" clustering lesson and needs no weights. To also see the trained 500-way")
+        print(" vocabulary: get portable_step64000.pt (git lfs / Google Drive folder / lab")
+        print(" share — routes in README_STUDENTS.md 'From home'), place it at the --ckpt")
+        print(" path, and rerun.]")
+        return
     print("\n=== PART B: the checkpoint's trained GMM, K=500 over 768-d features ===")
     ck = torch.load(args.ckpt, map_location='cpu', weights_only=False)
     g_means = ck['gmm_means'].float().to(dev)                # (500, 768)

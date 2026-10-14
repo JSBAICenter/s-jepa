@@ -91,9 +91,21 @@ def main():
     # ---- 1. build the model and load the EMA (target) encoder weights -------
     # 'ema_encoder' = the slow exponential-moving-average copy used to produce
     # training targets; it is the most stable snapshot of the representation.
-    ck = torch.load(args.ckpt, map_location='cpu', weights_only=False)
     enc = OnlineEncoder(**RECIPE)
-    enc.load_state_dict(ck['ema_encoder'], strict=True)
+    if os.path.exists(args.ckpt):
+        ck = torch.load(args.ckpt, map_location='cpu', weights_only=False)
+        enc.load_state_dict(ck['ema_encoder'], strict=True)
+        print(f"model source: TRAINED checkpoint ({os.path.basename(args.ckpt)}, ema_encoder)")
+    else:
+        # No weights? This script still teaches the STRUCTURE: a randomly-initialized
+        # encoder has identical stages and shapes — only the numbers (and the meaning
+        # of the features) differ. Everything below runs the same way.
+        torch.manual_seed(0)
+        print("=" * 70)
+        print("RANDOM INIT — checkpoint not found. Structure-only walkthrough:")
+        print("shapes/stages are real; feature VALUES and norms are meaningless until")
+        print("you load trained weights (see README_STUDENTS.md 'From home' for how).")
+        print("=" * 70)
     enc = enc.to(dev).float().eval()                          # eval: no dropout
 
     # ---- 2. load the clip ----------------------------------------------------

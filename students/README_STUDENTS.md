@@ -130,7 +130,28 @@ The trained checkpoint ships via **Git LFS** on the org repo **JSBAICenter/JEPA,
 snapshot; the 61k one stays on the lab share). The public `JSBAICenter/s-jepa` fork carries
 code + these scripts only — GitHub blocks LFS uploads to public forks. JEPA is a **private**
 repo: you need org access (SSH key, or HTTPS with a personal access token). The lab's
-sample clips are NOT in the repo — record your own (16 kHz mono, **<= 15 s**):
+sample clips are NOT in the repo — record your own (16 kHz mono, **<= 15 s**).
+
+**Getting the 242 MB checkpoint — any ONE of these routes is enough:**
+1. **In the clone already** — the Git LFS file downloads with the clone (org members; block below).
+2. **Google Drive** (access-restricted — ask the lab to be added):
+   <https://drive.google.com/drive/folders/1wYqKOMZY82I4cf5ehr0wnhPc3kToWxNM?usp=drive_link>
+   — download `portable_step64000.pt` and place it at `checkpoints/portable_step64000.pt`.
+3. **Lab share** — `/home/restricted-share/audio/checkpoints/` (on lab machines).
+
+**No checkpoint yet? You can still do plenty on your laptop:**
+- `python3 students/02_gmm_fitting.py --audio my_voice.wav [--audio b.wav ...]` — with the
+  checkpoint absent it runs **PART A only**: the complete clustering lesson (hand-rolled
+  log-mel + EM from scratch, fitted on YOUR voice). Needs no weights at all.
+- `python3 students/01_encoder.py --audio my_voice.wav` (leave --ckpt pointing at a missing
+  file) — falls back to a **randomly-initialized encoder**: identical architecture and
+  stage-by-stage shapes (the structure walkthrough); values clearly labeled as meaningless.
+- Read the paper — **`paper/sjepa_audio.pdf`** is in this repo (plus the follow-up
+  `paper/sjepa_followup_component_mapping.pdf` on the component-mapping problem our
+  coherence checks probe).
+- Guided code reading, no GPU needed: in `model.py` find (a) the conv that sets the 50 fps
+  frame rate, (b) where the predictor's mask token replaces masked frames, (c) the cluster
+  head; in `train.py` find the KL loss line and the EMA update loop.
 
 ```bash
 git clone -b sjepa-students git@github.com:JSBAICenter/JEPA.git s-jepa
@@ -165,6 +186,8 @@ ask the lab to enable a data pack or use the lab machines.
   every construct in these scripts is a commented replica of a piece of it.
 - `../../examples/load_audio_sjepa.py` — the verified minimal loader these scripts
   borrow from.
+- `paper/sjepa_audio.pdf` + `paper/sjepa_followup_component_mapping.pdf` — the method
+  paper and the component-mapping follow-up (both in this repo).
 
 ## Data provenance
 
