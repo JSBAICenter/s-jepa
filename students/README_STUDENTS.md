@@ -106,6 +106,20 @@ GPU optional but fast; every script takes `< 1 min` on a 3090/A6000. **No cv2** 
 crashes on lab machines). Clips must be **16 kHz mono** and **≤ 15 s** (the
 predictor's positional embedding covers at most 750 frames = 15 s at 50 fps).
 
+**On the lab machines everything is already installed — two steps and you're in:**
+
+```bash
+# ONCE per account (no sudo) — wires nvcc + the kit venvs into your ~/.bashrc:
+/home/restricted-share/setup/setup_user_env.sh && source ~/.bashrc
+
+# EVERY session — activate the audio venv, then run the scripts from this dir:
+sjepa-audio        # shorthand for: source /home/restricted-share/venvs/sjepa-audio/bin/activate
+python3 01_encoder.py
+```
+
+(Working from home instead? See "From home" below — there you pip-install into
+your own venv; the lab's setup scripts don't apply.)
+
 ## Follow-up exercises
 1. In `02`, change K (10 / 50 / 100) and watch convergence speed and the number of
    "dead" components. Which K explains 4 clips best without overfitting?
